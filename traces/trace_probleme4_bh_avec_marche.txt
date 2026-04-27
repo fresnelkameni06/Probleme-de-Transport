@@ -1,0 +1,503 @@
+  Trace écrite dans : D:\RO\final\traces\trace_probleme4_bh_avec_marche.txt
+
+  Problème : probleme4.txt   |   Algorithme : Balas-Hammer  +  Marche Pied
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║   ALGORITHME BALAS-HAMMER — CONSTRUCTION DE LA PROPOSITION INITIALE   ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+
+
+  ┌─────────────────────────────┐
+  │   ÉTAT INITIAL DU TABLEAU   │
+  └─────────────────────────────┘
+
+         Voici le tableau des coûts unitaires (données du problème) :
+
+  ── TABLEAU DES COÛTS UNITAIRES
+  ┌────────────────┬───────┬────────┬────────────────┐
+  │                │  C1   │   C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │       P1       │  30   │   1    │      600       │
+  ├────────────────┼───────┼────────┼────────────────┤
+  │       P2       │   1   │   30   │      500       │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │  Commandes Cj  │  100  │  1000  │                │
+  └────────────────┴───────┴────────┴────────────────┘
+
+         La proposition de transport est pour l'instant entièrement vide :
+
+  ── PROPOSITION INITIALE (vide)
+  ┌──────────────┬───────┬────────┬───────────────┐
+  │              │  C1   │   C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │      P1      │       │        │      600      │
+  ├──────────────┼───────┼────────┼───────────────┤
+  │      P2      │       │        │      500      │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  1000  │               │
+  └──────────────┴───────┴────────┴───────────────┘
+
+
+  ┌────────────────────────────────────────┐
+  │   DÉBUT DE L'ALGORITHME BALAS-HAMMER   │
+  └────────────────────────────────────────┘
+
+         Règle 1 : Calculer la pénalité de chaque ligne et colonne.
+                   Pénalité = (2ème plus petit coût) - (plus petit coût).
+         Règle 2 : Choisir la ligne ou colonne de pénalité MAXIMALE.
+         Règle 3 : Dans cette ligne/colonne, affecter le max possible
+                   à la case de coût MINIMAL.
+         Règle 4 : Saturer la provision ou commande épuisée, éliminer la ligne/colonne.
+         Règle 5 : Recommencer jusqu'à épuisement complet.
+
+  >>>  TABLEAU DES PÉNALITÉS — itération 1
+         Pénalité = écart entre les 2 plus petits coûts disponibles.
+
+  ── COÛTS + PÉNALITÉS
+  ┌──────────────┬───────┬────────┬───────────────┬────────────┐
+  │              │  C1   │   C2   │  Reste Prov.  │  Pénalité  │
+  ╠══════════════╪═══════╪════════╪═══════════════╪════════════╣
+  │      P1      │  30   │   1    │      600      │     29     │
+  ├──────────────┼───────┼────────┼───────────────┼────────────┤
+  │      P2      │   1   │   30   │      500      │     29     │
+  ╠══════════════╪═══════╪════════╪═══════════════╪════════════╣
+  │  Reste Cmd.  │  100  │  1000  │               │            │
+  │   Pénalité   │  29   │   29   │               │            │
+  └──────────────┴───────┴────────┴───────────────┴────────────┘
+
+         Pénalité maximale : 29  sur la ligne P1
+  -->  
+  -->  Égalité des pénalités : ligne = colonne = 29
+  -->    --> Tie-break : on choisit la case de coût minimal global.
+  -->    --> Case choisie : ( P1 , C2 )  coût = 1
+  -->  Quantité à transporter = min( 600 , 1000 ) = 600
+         Après affectation de 600 unités de P1 vers C2 :
+            Provision restante P1  =  0
+            Commande  restante C2  =  400
+
+  ── PROPOSITION EN COURS  (après itération 1)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │       │  600  │       0       │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │       │       │      500      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  400  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+  -->  Provision P1 épuisée --> ligne P1 éliminée.
+  -->  
+
+  >>>  TABLEAU DES PÉNALITÉS — itération 2
+         Pénalité = écart entre les 2 plus petits coûts disponibles.
+
+  ── COÛTS + PÉNALITÉS
+  ┌──────────────┬───────┬───────┬───────────────┬────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │  Pénalité  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╪════════════╣
+  │      P2      │   1   │  30   │      500      │     29     │
+  ╠══════════════╪═══════╪═══════╪═══════════════╪════════════╣
+  │  Reste Cmd.  │  100  │  400  │               │            │
+  │   Pénalité   │   0   │   0   │               │            │
+  └──────────────┴───────┴───────┴───────────────┴────────────┘
+
+         Pénalité maximale : 29  sur la ligne P2
+  -->  
+  -->  Pénalité max sur ligne P2 = 29  (> pén. col. 0)
+  -->    --> Coût minimal sur P2 : case ( P2 , C1 )  coût = 1
+  -->  Quantité à transporter = min( 500 , 100 ) = 100
+         Après affectation de 100 unités de P2 vers C1 :
+            Provision restante P2  =  400
+            Commande  restante C1  =  0
+
+  ── PROPOSITION EN COURS  (après itération 2)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │       │  600  │       0       │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │  100  │       │      400      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │   0   │  400  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+  -->  Commande C1 satisfaite --> colonne C1 éliminée.
+  -->  
+
+  >>>  TABLEAU DES PÉNALITÉS — itération 3
+         Pénalité = écart entre les 2 plus petits coûts disponibles.
+
+  ── COÛTS + PÉNALITÉS
+  ┌──────────────┬───────┬───────────────┬────────────┐
+  │              │  C2   │  Reste Prov.  │  Pénalité  │
+  ╠══════════════╪═══════╪═══════════════╪════════════╣
+  │      P2      │  30   │      400      │     0      │
+  ╠══════════════╪═══════╪═══════════════╪════════════╣
+  │  Reste Cmd.  │  400  │               │            │
+  │   Pénalité   │   0   │               │            │
+  └──────────────┴───────┴───────────────┴────────────┘
+
+         Pénalité maximale : 0  sur la ligne P2
+  -->  
+  -->  Égalité des pénalités : ligne = colonne = 0
+  -->    --> Tie-break : on choisit la case de coût minimal global.
+  -->    --> Case choisie : ( P2 , C2 )  coût = 30
+  -->  Quantité à transporter = min( 400 , 400 ) = 400
+         Après affectation de 400 unités de P2 vers C2 :
+            Provision restante P2  =  0
+            Commande  restante C2  =  0
+
+  ── PROPOSITION EN COURS  (après itération 3)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │       │  600  │       0       │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │  100  │  400  │       0       │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │   0   │   0   │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+  -->  CAS DÉGÉNÉRÉ : provision P2 ET commande C2 épuisées simultanément.
+  -->    --> On élimine uniquement la LIGNE P2 (on garde la colonne C2 active).
+  -->    --> Cela garantit n+m-1 = 3 cases de base (solution non dégénérée).
+  -->  
+
+  ┌──────────────────────────────────────┐
+  │   FIN DE L'ALGORITHME BALAS-HAMMER   │
+  └──────────────────────────────────────┘
+
+  [OK]  Toutes les provisions sont écoulées et toutes les commandes satisfaites.
+  [OK]  Cases de base utilisées : 3  (n + m - 1 = 3 pour un problème non dégénérée)
+
+  ╔═══════════════════════════════════════╗
+  ║   GRAPHE NATUREL (AVANT CORRECTION)   ║
+  ╚═══════════════════════════════════════╝
+
+  -->  [BRUT] arête : P1 ↔ C2
+  -->  [BRUT] arête : P2 ↔ C1
+  -->  [BRUT] arête : P2 ↔ C2
+
+  ┌───────────────────────────────────┐
+  │   CONNEXITÉ (GRAPHE BRUT) — BFS   │
+  └───────────────────────────────────┘
+
+  -->  [BRUT] visite : P0
+  -->  [BRUT] visite : C1
+  -->  [BRUT] visite : P1
+  -->  [BRUT] visite : C0
+  [OK]  ✔ Graphe brut connexe
+
+  ┌───────────────────────────────┐
+  │   CYCLE (GRAPHE BRUT) — BFS   │
+  └───────────────────────────────┘
+
+  -->  [BRUT] BFS visite : P0
+  -->  [BRUT] BFS visite : C1
+  -->  [BRUT] BFS visite : P1
+  -->  [BRUT] BFS visite : C0
+  [OK]  ✔ Pas de cycle (brut)
+
+  ┌───────────────────────────────────┐
+  │   NOMBRE D'ARÊTES (GRAPHE BRUT)   │
+  └───────────────────────────────────┘
+
+         [BRUT] arêtes = 3
+         [BRUT] attendu = 3
+  [OK]  ✔ Nombre correct
+
+  ╔═══════════════════════════════════════════════════╗
+  ║   GRAPHE APRÈS CORRECTION (AVEC CASES FICTIVES)   ║
+  ╚═══════════════════════════════════════════════════╝
+
+  -->  [CORRIGÉ] arête : P1 ↔ C2
+  -->  [CORRIGÉ] arête : P2 ↔ C1
+  -->  [CORRIGÉ] arête : P2 ↔ C2
+
+  ┌──────────────────────────────────────┐
+  │   CONNEXITÉ (GRAPHE CORRIGÉ) — BFS   │
+  └──────────────────────────────────────┘
+
+  -->  [CORRIGÉ] visite : P0
+  -->  [CORRIGÉ] visite : C1
+  -->  [CORRIGÉ] visite : P1
+  -->  [CORRIGÉ] visite : C0
+  [OK]  ✔ Graphe connexe
+
+  ┌──────────────────────────────────┐
+  │   CYCLE (GRAPHE CORRIGÉ) — BFS   │
+  └──────────────────────────────────┘
+
+  -->  [CORRIGÉ] BFS visite : P0
+  -->  [CORRIGÉ] BFS visite : C1
+  -->  [CORRIGÉ] BFS visite : P1
+  -->  [CORRIGÉ] BFS visite : C0
+  [OK]  ✔ Aucun cycle → arbre valide
+
+  ┌─────────────────────────────┐
+  │   NOMBRE D'ARÊTES (FINAL)   │
+  └─────────────────────────────┘
+
+         Cases de base = 3
+         Attendu = 3
+  [OK]  ✔ Solution NON dégénérée
+
+  ┌──────────────────────────────────────┐
+  │   FIN DE L'ALGORITHME BALAS-HAMMER   │
+  └──────────────────────────────────────┘
+
+
+  ┌────────────────────────────────────────────┐
+  │   CALCUL DU COÛT TOTAL DE LA PROPOSITION   │
+  └────────────────────────────────────────────┘
+
+         Formule : Coût total  =  Σ  a(i,j) × b(i,j)  pour toutes les cases de base
+
+           P1 --> C2  :       1  ×     600  =        600
+           P2 --> C1  :       1  ×     100  =        100
+           P2 --> C2  :      30  ×     400  =      12000
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Balas-Hammer)  =  12700
+  ══════════════════════════════════════════════════════════
+
+
+  ╔═════════════════════════╗
+  ║   RÉCAPITULATIF FINAL   ║
+  ╚═════════════════════════╝
+
+         Proposition initiale complète obtenue par Balas-Hammer :
+
+  ── PROPOSITION INITIALE BALAS-HAMMER (finale)
+  ┌──────────────┬───────┬────────┬───────────────┐
+  │              │  C1   │   C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │      P1      │   0   │  600   │      600      │
+  ├──────────────┼───────┼────────┼───────────────┤
+  │      P2      │  100  │  400   │      500      │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  1000  │               │
+  └──────────────┴───────┴────────┴───────────────┘
+
+         Rappel de la matrice des coûts :
+
+  ── MATRICE DES COÛTS (rappel)
+  ┌────────────────┬───────┬────────┬────────────────┐
+  │                │  C1   │   C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │       P1       │  30   │   1    │      600       │
+  ├────────────────┼───────┼────────┼────────────────┤
+  │       P2       │   1   │   30   │      500       │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │  Commandes Cj  │  100  │  1000  │                │
+  └────────────────┴───────┴────────┴────────────────┘
+
+
+  >>>  TABLEAU CROISÉ : coût unitaire × quantité transportée
+
+  ── CONTRIBUTION DE CHAQUE CASE (coût × quantité)
+  ┌──────┬─────────┬──────────┐
+  │      │   C1    │    C2    │
+  ╠══════╪═════════╪══════════╣
+  │  P1  │         │  1×600   │
+  ├──────┼─────────┼──────────┤
+  │  P2  │  1×100  │  30×400  │
+  └──────┴─────────┴──────────┘
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Balas-Hammer)  =  12700
+  ══════════════════════════════════════════════════════════
+
+
+  ╔════════════════════════════════════════════╗
+  ║   MÉTHODE DU MARCHE PIED AVEC POTENTIELS   ║
+  ╚════════════════════════════════════════════╝
+
+         Optimisation de la proposition initiale obtenue par : Balas-Hammer
+         Rappel de l'algorithme :
+           1. Racine = sommet de degré max → E(racine) = 0
+           2. Propagation BFS : E(Pi) - E(Cj) = c(i,j)
+           3. Tableau des coûts potentiels  c*(i,j) = E(Pi) - E(Cj)
+           4. Tableau des coûts marginaux   d(i,j)  = c(i,j) - c*(i,j)
+           5. Si tous d >= 0 → OPTIMAL → coût total
+              Sinon → case pivot (d le plus négatif) → cycle → Δ → mise à jour
+
+  ┌──────────────────────────────────────────────────────────┐
+  │   PROPOSITION FINALE DE BALAS-HAMMER — POINT DE DÉPART   │
+  └──────────────────────────────────────────────────────────┘
+
+         Tableau reproduit depuis la dernière itération de Balas-Hammer (cases fictives incluses).
+
+  ── PROPOSITION INITIALE — Balas-Hammer
+  ┌──────────────┬───────┬────────┬───────────────┐
+  │              │  C1   │   C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │      P1      │       │  600   │      600      │
+  ├──────────────┼───────┼────────┼───────────────┤
+  │      P2      │  100  │  400   │      500      │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  1000  │               │
+  └──────────────┴───────┴────────┴───────────────┘
+
+         Coût de la proposition initiale (Balas-Hammer) = 12700
+
+  ┌──────────────────────────────────────────────┐
+  │   ARBRE DE BASE (cases de base avec coûts)   │
+  └──────────────────────────────────────────────┘
+
+         Arêtes de l'arbre (cases visitées, fictives incluses) :
+            P1 ↔ C2   coût unitaire = 1   quantité = 600
+            P2 ↔ C1   coût unitaire = 1   quantité = 100
+            P2 ↔ C2   coût unitaire = 30   quantité = 400
+
+  ╔═══════════════════════════════╗
+  ║   ITÉRATION 1 — MARCHE PIED   ║
+  ╚═══════════════════════════════╝
+
+
+  ┌─────────────────────────────────────────────────┐
+  │   CHOIX DE LA RACINE (POTENTIEL DE RÉFÉRENCE)   │
+  └─────────────────────────────────────────────────┘
+
+         On choisit le sommet ayant le plus de connexions dans l'arbre.
+         Cela minimise la profondeur du BFS et donc la complexité.
+
+  ── DEGRÉS DES SOMMETS
+  ┌─────────┬──────┬──────┬──────┬──────┐
+  │         │  C0  │  C1  │  P0  │  P1  │
+  ╠═════════╪══════╪══════╪══════╪══════╣
+  │  Degré  │  1   │  2   │  1   │  2   │
+  └─────────┴──────┴──────┴──────┴──────┘
+
+         Racine choisie : C1  (degré maximal = 2)
+         → E(C1) = 0  (potentiel de référence)
+
+  ┌─────────────────────────────────┐
+  │   CALCUL DES POTENTIELS — BFS   │
+  └─────────────────────────────────┘
+
+         Formule de base : E(Pi) - E(Cj) = c(i,j)  pour chaque case de base.
+         On propage depuis la racine en utilisant les cases déjà calculées.
+  -->  E(P0) - E(C1) = 1  →  E(P0) = 0 + 1 = 1
+  -->  E(P1) - E(C1) = 30  →  E(P1) = 0 + 30 = 30
+  -->  E(P1) - E(C0) = 1  →  E(C0) = 30 - 1 = 29
+
+  ┌────────────────────────────┐
+  │   VALEURS DES POTENTIELS   │
+  └────────────────────────────┘
+
+         E(racine) = 0  puis propagation par BFS.
+
+  ── POTENTIELS FOURNISSEURS
+  ┌─────────┬──────┬──────┐
+  │         │  P1  │  P2  │
+  ╠═════════╪══════╪══════╣
+  │  E(Pi)  │  1   │  30  │
+  └─────────┴──────┴──────┘
+
+
+  ── POTENTIELS CLIENTS
+  ┌─────────┬──────┬──────┐
+  │         │  C1  │  C2  │
+  ╠═════════╪══════╪══════╣
+  │  E(Cj)  │  29  │  0   │
+  └─────────┴──────┴──────┘
+
+
+  ┌────────────────────────────────────────────────────────────┐
+  │   TABLEAU DES COÛTS POTENTIELS   c*(i,j) = E(Pi) - E(Cj)   │
+  └────────────────────────────────────────────────────────────┘
+
+         Cases de base (B) : c*(i,j) = c(i,j)  par construction des potentiels.
+
+  ── COÛTS POTENTIELS
+  ┌──────┬────────┬─────────┐
+  │      │   C1   │   C2    │
+  ╠══════╪════════╪═════════╣
+  │  P1  │  -28   │  1(B)   │
+  ├──────┼────────┼─────────┤
+  │  P2  │  1(B)  │  30(B)  │
+  └──────┴────────┴─────────┘
+
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │   TABLEAU DES COÛTS MARGINAUX   d(i,j) = c(i,j) - c*(i,j)   │
+  └─────────────────────────────────────────────────────────────┘
+
+         Cases de base (B) : d = 0  (par définition des potentiels).
+         Valeur négative ← : amélioration possible sur cette case.
+
+  ── COÛTS MARGINAUX
+  ┌──────┬────────┬────────┐
+  │      │   C1   │   C2   │
+  ╠══════╪════════╪════════╣
+  │  P1  │   58   │  0(B)  │
+  ├──────┼────────┼────────┤
+  │  P2  │  0(B)  │  0(B)  │
+  └──────┴────────┴────────┘
+
+  [OK]  ✔ Tous les coûts marginaux sont >= 0 → solution OPTIMALE
+
+  ┌────────────────────────────────────────────┐
+  │   CALCUL DU COÛT TOTAL DE LA PROPOSITION   │
+  └────────────────────────────────────────────┘
+
+         Formule : Coût total  =  Σ  a(i,j) × b(i,j)  pour toutes les cases de base
+
+           P1 --> C2  :       1  ×     600  =        600
+           P2 --> C1  :       1  ×     100  =        100
+           P2 --> C2  :      30  ×     400  =      12000
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Marche Pied)  =  12700
+  ══════════════════════════════════════════════════════════
+
+
+  ╔═════════════════════════╗
+  ║   RÉCAPITULATIF FINAL   ║
+  ╚═════════════════════════╝
+
+         Proposition initiale complète obtenue par Marche Pied :
+
+  ── PROPOSITION INITIALE MARCHE PIED (finale)
+  ┌──────────────┬───────┬────────┬───────────────┐
+  │              │  C1   │   C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │      P1      │   0   │  600   │      600      │
+  ├──────────────┼───────┼────────┼───────────────┤
+  │      P2      │  100  │  400   │      500      │
+  ╠══════════════╪═══════╪════════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  1000  │               │
+  └──────────────┴───────┴────────┴───────────────┘
+
+         Rappel de la matrice des coûts :
+
+  ── MATRICE DES COÛTS (rappel)
+  ┌────────────────┬───────┬────────┬────────────────┐
+  │                │  C1   │   C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │       P1       │  30   │   1    │      600       │
+  ├────────────────┼───────┼────────┼────────────────┤
+  │       P2       │   1   │   30   │      500       │
+  ╠════════════════╪═══════╪════════╪════════════════╣
+  │  Commandes Cj  │  100  │  1000  │                │
+  └────────────────┴───────┴────────┴────────────────┘
+
+
+  >>>  TABLEAU CROISÉ : coût unitaire × quantité transportée
+
+  ── CONTRIBUTION DE CHAQUE CASE (coût × quantité)
+  ┌──────┬─────────┬──────────┐
+  │      │   C1    │    C2    │
+  ╠══════╪═════════╪══════════╣
+  │  P1  │         │  1×600   │
+  ├──────┼─────────┼──────────┤
+  │  P2  │  1×100  │  30×400  │
+  └──────┴─────────┴──────────┘
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Marche Pied)  =  12700
+  ══════════════════════════════════════════════════════════
+

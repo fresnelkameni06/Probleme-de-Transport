@@ -1,0 +1,400 @@
+  Trace écrite dans : D:\RO\final\traces\trace_probleme2_no_avec_marche.txt
+
+  Problème : probleme2.txt   |   Algorithme : Nord-Ouest  +  Marche Pied
+
+
+  ╔═════════════════════════════════════════════════════════════════════╗
+  ║   ALGORITHME NORD-OUEST — CONSTRUCTION DE LA PROPOSITION INITIALE   ║
+  ╚═════════════════════════════════════════════════════════════════════╝
+
+
+  ┌─────────────────────────────┐
+  │   ÉTAT INITIAL DU TABLEAU   │
+  └─────────────────────────────┘
+
+         Voici le tableau des coûts unitaires (données du problème) :
+
+  ── TABLEAU DES COÛTS UNITAIRES
+  ┌────────────────┬───────┬───────┬────────────────┐
+  │                │  C1   │  C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │       P1       │  10   │  20   │      100       │
+  ├────────────────┼───────┼───────┼────────────────┤
+  │       P2       │  30   │  10   │      100       │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │  Commandes Cj  │  100  │  100  │                │
+  └────────────────┴───────┴───────┴────────────────┘
+
+         La proposition de transport est pour l'instant entièrement vide :
+
+  ── PROPOSITION INITIALE (vide)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │       │       │      100      │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │       │       │      100      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  100  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+
+  >>>  ITÉRATION 1  —  Case ( P1 , C1 )
+  -->  On transporte min(100, 100) = 100
+
+  ── PROPOSITION EN COURS (itération 1)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │  100  │       │       0       │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │       │       │      100      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │   0   │  100  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+  -->  CAS DÉGÉNÉRÉ détecté (ligne et colonne saturées)
+  -->  → Il faut conserver n+m-1 = 3 cases de base
+  -->  → On ajoute une case fictive en (P1, C2)
+  -->  → Déplacement en diagonale
+
+  >>>  ITÉRATION 2  —  Case ( P2 , C2 )
+  -->  On transporte min(100, 100) = 100
+
+  ── PROPOSITION EN COURS (itération 2)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │  100  │   0   │       0       │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │       │  100  │       0       │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │   0   │   0   │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+  -->  CAS DÉGÉNÉRÉ détecté (ligne et colonne saturées)
+  -->  → Il faut conserver n+m-1 = 3 cases de base
+  -->  → Déplacement en diagonale
+
+  ╔═══════════════════════════════════════╗
+  ║   GRAPHE NATUREL (AVANT CORRECTION)   ║
+  ╚═══════════════════════════════════════╝
+
+  -->  [BRUT] arête : P2 ↔ C2
+  -->  [BRUT] arête : P1 ↔ C1
+
+  ┌───────────────────────────────────┐
+  │   CONNEXITÉ (GRAPHE BRUT) — BFS   │
+  └───────────────────────────────────┘
+
+  -->  [BRUT] visite : P1
+  -->  [BRUT] visite : C1
+  [OK]  ❌ Graphe brut NON connexe
+
+  ┌───────────────────────────────┐
+  │   CYCLE (GRAPHE BRUT) — BFS   │
+  └───────────────────────────────┘
+
+  -->  [BRUT] BFS visite : P1
+  -->  [BRUT] BFS visite : C1
+  [OK]  ✔ Pas de cycle (brut)
+
+  ┌───────────────────────────────────┐
+  │   NOMBRE D'ARÊTES (GRAPHE BRUT)   │
+  └───────────────────────────────────┘
+
+         [BRUT] arêtes = 2
+         [BRUT] attendu = 3
+  [OK]  ❌ Nombre incorrect → dégénérescence
+
+  ╔═══════════════════════════════════════════════════╗
+  ║   GRAPHE APRÈS CORRECTION (AVEC CASES FICTIVES)   ║
+  ╚═══════════════════════════════════════════════════╝
+
+  -->  [CORRIGÉ] arête : P1 ↔ C2
+  -->  [CORRIGÉ] arête : P2 ↔ C2
+  -->  [CORRIGÉ] arête : P1 ↔ C1
+
+  ┌──────────────────────────────────────┐
+  │   CONNEXITÉ (GRAPHE CORRIGÉ) — BFS   │
+  └──────────────────────────────────────┘
+
+  -->  [CORRIGÉ] visite : P0
+  -->  [CORRIGÉ] visite : C1
+  -->  [CORRIGÉ] visite : C0
+  -->  [CORRIGÉ] visite : P1
+  [OK]  ✔ Graphe connexe
+
+  ┌──────────────────────────────────┐
+  │   CYCLE (GRAPHE CORRIGÉ) — BFS   │
+  └──────────────────────────────────┘
+
+  -->  [CORRIGÉ] BFS visite : P0
+  -->  [CORRIGÉ] BFS visite : C1
+  -->  [CORRIGÉ] BFS visite : C0
+  -->  [CORRIGÉ] BFS visite : P1
+  [OK]  ✔ Aucun cycle → arbre valide
+
+  ┌─────────────────────────────┐
+  │   NOMBRE D'ARÊTES (FINAL)   │
+  └─────────────────────────────┘
+
+         Cases de base = 3
+         Attendu = 3
+  [OK]  ✔ Solution NON dégénérée
+
+  ┌────────────────────────────────────┐
+  │   FIN DE L'ALGORITHME NORD-OUEST   │
+  └────────────────────────────────────┘
+
+
+  ┌────────────────────────────────────────────┐
+  │   CALCUL DU COÛT TOTAL DE LA PROPOSITION   │
+  └────────────────────────────────────────────┘
+
+         Formule : Coût total  =  Σ  a(i,j) × b(i,j)  pour toutes les cases de base
+
+           P1 --> C1  :      10  ×     100  =       1000
+           P2 --> C2  :      10  ×     100  =       1000
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Nord-Ouest)  =  2000
+  ══════════════════════════════════════════════════════════
+
+
+  ╔═════════════════════════╗
+  ║   RÉCAPITULATIF FINAL   ║
+  ╚═════════════════════════╝
+
+         Proposition initiale complète obtenue par Nord-Ouest :
+
+  ── PROPOSITION INITIALE NORD-OUEST (finale)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │  100  │   0   │      100      │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │   0   │  100  │      100      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  100  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+         Rappel de la matrice des coûts :
+
+  ── MATRICE DES COÛTS (rappel)
+  ┌────────────────┬───────┬───────┬────────────────┐
+  │                │  C1   │  C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │       P1       │  10   │  20   │      100       │
+  ├────────────────┼───────┼───────┼────────────────┤
+  │       P2       │  30   │  10   │      100       │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │  Commandes Cj  │  100  │  100  │                │
+  └────────────────┴───────┴───────┴────────────────┘
+
+
+  >>>  TABLEAU CROISÉ : coût unitaire × quantité transportée
+
+  ── CONTRIBUTION DE CHAQUE CASE (coût × quantité)
+  ┌──────┬──────────┬──────────┐
+  │      │    C1    │    C2    │
+  ╠══════╪══════════╪══════════╣
+  │  P1  │  10×100  │          │
+  ├──────┼──────────┼──────────┤
+  │  P2  │          │  10×100  │
+  └──────┴──────────┴──────────┘
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Nord-Ouest)  =  2000
+  ══════════════════════════════════════════════════════════
+
+
+  ╔════════════════════════════════════════════╗
+  ║   MÉTHODE DU MARCHE PIED AVEC POTENTIELS   ║
+  ╚════════════════════════════════════════════╝
+
+         Optimisation de la proposition initiale obtenue par : Nord-Ouest
+         Rappel de l'algorithme :
+           1. Racine = sommet de degré max → E(racine) = 0
+           2. Propagation BFS : E(Pi) - E(Cj) = c(i,j)
+           3. Tableau des coûts potentiels  c*(i,j) = E(Pi) - E(Cj)
+           4. Tableau des coûts marginaux   d(i,j)  = c(i,j) - c*(i,j)
+           5. Si tous d >= 0 → OPTIMAL → coût total
+              Sinon → case pivot (d le plus négatif) → cycle → Δ → mise à jour
+
+  ┌────────────────────────────────────────────────────────┐
+  │   PROPOSITION FINALE DE NORD-OUEST — POINT DE DÉPART   │
+  └────────────────────────────────────────────────────────┘
+
+         Tableau reproduit depuis la dernière itération de Nord-Ouest (cases fictives incluses).
+
+  ── PROPOSITION INITIALE — Nord-Ouest
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │  100  │   0   │      100      │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │       │  100  │      100      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  100  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+         Coût de la proposition initiale (Nord-Ouest) = 2000
+
+  ┌──────────────────────────────────────────────┐
+  │   ARBRE DE BASE (cases de base avec coûts)   │
+  └──────────────────────────────────────────────┘
+
+         Arêtes de l'arbre (cases visitées, fictives incluses) :
+            P1 ↔ C1   coût unitaire = 10   quantité = 100
+            P1 ↔ C2   coût unitaire = 20   quantité = 0 [fictive]
+            P2 ↔ C2   coût unitaire = 10   quantité = 100
+
+  ╔═══════════════════════════════╗
+  ║   ITÉRATION 1 — MARCHE PIED   ║
+  ╚═══════════════════════════════╝
+
+
+  ┌─────────────────────────────────────────────────┐
+  │   CHOIX DE LA RACINE (POTENTIEL DE RÉFÉRENCE)   │
+  └─────────────────────────────────────────────────┘
+
+         On choisit le sommet ayant le plus de connexions dans l'arbre.
+         Cela minimise la profondeur du BFS et donc la complexité.
+
+  ── DEGRÉS DES SOMMETS
+  ┌─────────┬──────┬──────┬──────┬──────┐
+  │         │  C0  │  C1  │  P0  │  P1  │
+  ╠═════════╪══════╪══════╪══════╪══════╣
+  │  Degré  │  1   │  2   │  2   │  1   │
+  └─────────┴──────┴──────┴──────┴──────┘
+
+         Racine choisie : P0  (degré maximal = 2)
+         → E(P0) = 0  (potentiel de référence)
+
+  ┌─────────────────────────────────┐
+  │   CALCUL DES POTENTIELS — BFS   │
+  └─────────────────────────────────┘
+
+         Formule de base : E(Pi) - E(Cj) = c(i,j)  pour chaque case de base.
+         On propage depuis la racine en utilisant les cases déjà calculées.
+  -->  E(P0) - E(C1) = 20  →  E(C1) = 0 - 20 = -20
+  -->  E(P0) - E(C0) = 10  →  E(C0) = 0 - 10 = -10
+  -->  E(P1) - E(C1) = 10  →  E(P1) = -20 + 10 = -10
+
+  ┌────────────────────────────┐
+  │   VALEURS DES POTENTIELS   │
+  └────────────────────────────┘
+
+         E(racine) = 0  puis propagation par BFS.
+
+  ── POTENTIELS FOURNISSEURS
+  ┌─────────┬──────┬───────┐
+  │         │  P1  │  P2   │
+  ╠═════════╪══════╪═══════╣
+  │  E(Pi)  │  0   │  -10  │
+  └─────────┴──────┴───────┘
+
+
+  ── POTENTIELS CLIENTS
+  ┌─────────┬───────┬───────┐
+  │         │  C1   │  C2   │
+  ╠═════════╪═══════╪═══════╣
+  │  E(Cj)  │  -10  │  -20  │
+  └─────────┴───────┴───────┘
+
+
+  ┌────────────────────────────────────────────────────────────┐
+  │   TABLEAU DES COÛTS POTENTIELS   c*(i,j) = E(Pi) - E(Cj)   │
+  └────────────────────────────────────────────────────────────┘
+
+         Cases de base (B) : c*(i,j) = c(i,j)  par construction des potentiels.
+
+  ── COÛTS POTENTIELS
+  ┌──────┬─────────┬─────────┐
+  │      │   C1    │   C2    │
+  ╠══════╪═════════╪═════════╣
+  │  P1  │  10(B)  │  20(B)  │
+  ├──────┼─────────┼─────────┤
+  │  P2  │    0    │  10(B)  │
+  └──────┴─────────┴─────────┘
+
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │   TABLEAU DES COÛTS MARGINAUX   d(i,j) = c(i,j) - c*(i,j)   │
+  └─────────────────────────────────────────────────────────────┘
+
+         Cases de base (B) : d = 0  (par définition des potentiels).
+         Valeur négative ← : amélioration possible sur cette case.
+
+  ── COÛTS MARGINAUX
+  ┌──────┬────────┬────────┐
+  │      │   C1   │   C2   │
+  ╠══════╪════════╪════════╣
+  │  P1  │  0(B)  │  0(B)  │
+  ├──────┼────────┼────────┤
+  │  P2  │   30   │  0(B)  │
+  └──────┴────────┴────────┘
+
+  [OK]  ✔ Tous les coûts marginaux sont >= 0 → solution OPTIMALE
+
+  ┌────────────────────────────────────────────┐
+  │   CALCUL DU COÛT TOTAL DE LA PROPOSITION   │
+  └────────────────────────────────────────────┘
+
+         Formule : Coût total  =  Σ  a(i,j) × b(i,j)  pour toutes les cases de base
+
+           P1 --> C1  :      10  ×     100  =       1000
+           P2 --> C2  :      10  ×     100  =       1000
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Marche Pied)  =  2000
+  ══════════════════════════════════════════════════════════
+
+
+  ╔═════════════════════════╗
+  ║   RÉCAPITULATIF FINAL   ║
+  ╚═════════════════════════╝
+
+         Proposition initiale complète obtenue par Marche Pied :
+
+  ── PROPOSITION INITIALE MARCHE PIED (finale)
+  ┌──────────────┬───────┬───────┬───────────────┐
+  │              │  C1   │  C2   │  Reste Prov.  │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │      P1      │  100  │   0   │      100      │
+  ├──────────────┼───────┼───────┼───────────────┤
+  │      P2      │   0   │  100  │      100      │
+  ╠══════════════╪═══════╪═══════╪═══════════════╣
+  │  Reste Cmd.  │  100  │  100  │               │
+  └──────────────┴───────┴───────┴───────────────┘
+
+         Rappel de la matrice des coûts :
+
+  ── MATRICE DES COÛTS (rappel)
+  ┌────────────────┬───────┬───────┬────────────────┐
+  │                │  C1   │  C2   │  Provision Pi  │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │       P1       │  10   │  20   │      100       │
+  ├────────────────┼───────┼───────┼────────────────┤
+  │       P2       │  30   │  10   │      100       │
+  ╠════════════════╪═══════╪═══════╪════════════════╣
+  │  Commandes Cj  │  100  │  100  │                │
+  └────────────────┴───────┴───────┴────────────────┘
+
+
+  >>>  TABLEAU CROISÉ : coût unitaire × quantité transportée
+
+  ── CONTRIBUTION DE CHAQUE CASE (coût × quantité)
+  ┌──────┬──────────┬──────────┐
+  │      │    C1    │    C2    │
+  ╠══════╪══════════╪══════════╣
+  │  P1  │  10×100  │          │
+  ├──────┼──────────┼──────────┤
+  │  P2  │          │  10×100  │
+  └──────┴──────────┴──────────┘
+
+  ══════════════════════════════════════════════════════════
+       COÛT TOTAL (Marche Pied)  =  2000
+  ══════════════════════════════════════════════════════════
+
